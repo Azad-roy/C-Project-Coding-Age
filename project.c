@@ -28,19 +28,19 @@ void readPlayerData() {
 }
 
 void deletePlayerData() {
-    if (remove(FILENAME) == 0) {
+    if (remove(FILENAME)) {
         printf("All player data deleted successfully.\n");
     } else {
-        printf("Error deleting player data!\n");
+        printf("Error deleting player data\n");
     }
 }
 
 void deleteSpecificPlayer() {
-    char nameToDelete[50];
+    char nameDelete[50];
     printf("Enter the name of the player to delete: ");
     getchar();
-    fgets(nameToDelete, sizeof(nameToDelete), stdin);
-    nameToDelete[strcspn(nameToDelete, "\n")] = '\0';
+    fgets(nameDelete, sizeof(nameDelete), stdin);
+    nameDelete[strcspn(nameDelete, "\n")] = '\0';
 
     FILE *file = fopen(FILENAME, "r");
     FILE *temp = fopen("temp.txt", "w");
@@ -49,9 +49,8 @@ void deleteSpecificPlayer() {
     char line[100];
     int found = 0;
     while (fgets(line, sizeof(line), file)) {
-        if (strstr(line, nameToDelete) != NULL) {
+        if (strstr(line, nameDelete) != NULL) { 
             found = 1;
-            fgets(line, sizeof(line), file);
             fgets(line, sizeof(line), file);
         } else {
             fputs(line, temp);
@@ -65,9 +64,9 @@ void deleteSpecificPlayer() {
     rename("temp.txt", FILENAME);
 
     if (found) {
-        printf("Player '%s' deleted successfully.\n", nameToDelete);
+        printf("Player '%s' deleted successfully.\n", nameDelete);
     } else {
-        printf("Player '%s' not found!\n", nameToDelete);
+        printf("Player '%s' not found!\n", nameDelete);
     }
 }
 
@@ -75,19 +74,16 @@ void updatePlayerData() {
     char nameToUpdate[50];
     printf("Enter the name of the player to update: ");
     getchar();
+
     fgets(nameToUpdate, sizeof(nameToUpdate), stdin);
     nameToUpdate[strcspn(nameToUpdate, "\n")] = '\0';
 
     FILE *file = fopen(FILENAME, "r");
     FILE *temp = fopen("temp.txt", "w");
-    if (file == NULL || temp == NULL) {
-        printf("Error opening file!\n");
-        return;
-    }
 
     char line[100];
     int found = 0;
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line, sizeof(line), file)) { 
         if (strstr(line, nameToUpdate) != NULL) {
             found = 1;
             printf("Enter new name: ");
@@ -101,7 +97,6 @@ void updatePlayerData() {
             getchar();
 
             fprintf(temp, "Name : %s\nAge  : %d\n", newName, newAge);
-            fgets(line, sizeof(line), file);
             fgets(line, sizeof(line), file);
         } else {
             fputs(line, temp);
